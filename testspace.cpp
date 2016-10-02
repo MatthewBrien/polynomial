@@ -15,21 +15,39 @@ int main(){
  Polynomial dude;
  dude.build();
  dude.print();
- cout << "--------------------------------"<<endl;
+  cout << "_________________________________________"<<endl;
+
+ cout << "-------------adding-------------------"<<endl;
  Polynomial three;
-
- three.print();
- cout << "--------------------------------"<<endl;
- three = patty + dude;
-
- three.print();
- cout << "--------------------------------"<<endl;
-
- three = dude;
+ patty.print();
  dude.print();
- 
+ cout << "_________________________________________"<<endl;
+ three = patty + dude;
+ three.print();
+
+
+ cout << "-------------subtracting-------------------"<<endl;
+ patty.print();
+ dude.print();
+ cout << "_________________________________________"<<endl;
+ three = patty - dude;
+ three.print();
 
 
 
+ cout << "-------------multiplying-------------------"<<endl;
+ patty.print();
+ dude.print();
+ cout << "_________________________________________"<<endl;
+ three = patty * dude;
+ three.print();
+
+
+ cout << "-------------Modulus-------------------"<<endl;
+ patty.print();
+ dude.print();
+ cout << "_________________________________________"<<endl;
+ three = patty % dude;
+ three.print();
   return 0;
 }
