@@ -7,11 +7,13 @@ private:
 
   double *constants;
   int degree; //largest degree, and length of polynomial
-  void divisionHelper(const Polynomial&, const Polynomial&); //return array, containing quotient and remainder
+  void divisionHelper(const Polynomial&); //return array, containing quotient and remainder
+
 
 public:
   Polynomial(){degree = -1; constants=NULL;}
-    Polynomial(string); //TODO, implement this
+  Polynomial(int d){Polynomial();empty(d);} //create an empty polynomial of degree d
+  Polynomial(string); //TODO, implement this
   Polynomial operator+(const Polynomial&); //
   Polynomial operator-(const Polynomial&);
   Polynomial operator*(const Polynomial&);
@@ -32,7 +34,11 @@ public:
 
 void build(); //allocated a new Polynomial, term by term, through user input
 void print() const; //display a formated version of he polynomial
-Polynomial GCD(Polynomial)const;
+void empty(int); //take int as degree, create empty polynomial of that size
+Polynomial GCD(Polynomial)const; //TODO implement GCD
+int getDegree() const {return degree;}
+int getLength() const {return degree+1;}
+void clearLeadingZeros();
 //vector<Polynomial> primeFactorizaion() const;
 
 

@@ -76,7 +76,28 @@ void Polynomial::print() const{
   }
 }//end print()
 
-//
+//take int as degree, create empty polynomial of that size
+//if newDegree is invalid, set degree to -1, and constants to NULL
+void Polynomial::empty(int newDegree){
+  degree = newDegree;
+  if(degree > -1)
+  {
+    double *temp = constants;
+    delete[] temp;
+    constants = new double[degree+1];
+    for(int i = 0; i<=degree; i++){
+      constants[i] = 0;
+    }
+  }
+  else{
+    degree = -1;
+    double *temp = constants;
+    delete[] temp;
+    constants = NULL;
+  }
+
+}
+
 Polynomial Polynomial::operator+(const Polynomial& p2){
 
   Polynomial sum; //new resut polynomial
@@ -126,7 +147,7 @@ Polynomial Polynomial::operator-(const Polynomial& p2){
       difference.constants[i] = constants[i];
     }
   }
-
+  //difference.clearLeadingZeros();
   return difference;
 }//operator -
 
@@ -146,35 +167,72 @@ void Polynomial::operator=(const Polynomial& p2){
 
 Polynomial Polynomial::operator*(const Polynomial& p2){
   Polynomial product;
-  product.degree = this->degree + p2.degree;
-  product.constants = new double[degree+1];
-  //initialize product's constants to zero
-  for(int i = 0; i<=product.degree; i++){
-    product.constants[i] = 0;
-  }
-
+  product.empty(this->degree + p2.degree);
   //itterate over both factos,
   for(int i = 0; i<=this->degree; i++){
     for(int ii = 0; ii<=p2.degree; ii++){
       product.constants[i+ii] += this->constants[i] * p2.constants[ii];
     }
   }
-
   return product;
 }
 
 Polynomial Polynomial::operator/(const Polynomial& p2){
-  divisionHelper(*this, p2);
+  divisionHelper(p2);
   return p2;
 }//operator /
 
 Polynomial Polynomial::operator%(const Polynomial& p2){
-  divisionHelper(*this, p2);
+  divisionHelper(p2);
   return p2;
 }//operator %
 
-void Polynomial::divisionHelper(const Polynomial& p1, const Polynomial& p2){
-  cout << "dividing stuff" << endl;
+
+void Polynomial::divisionHelper( const Polynomial& p2){
+  Polynomial dividend =*this; //number being divided
+  Polynomial divisor = p2; //number the dividen will be divided by
+  Polynomial results[2]; //[0] is quotient [1] is remainder
+
+  if(dividend.degree < divisor.degree){
+    results[0] = Polynomial();
+    results[1] = dividend;
+  }
+  else{
+    results[0] = Polynomial((dividend.degree - divisor.degree));
+    results[1] = Polynomial((results[0].degree - 1));
+
+    double result = dividend.constants[dividend.degree] / divisor.constants[divisor.degree];
+    results[0].constants[dividend.degree - divisor.degree] = result;
+    //TODO, remove leading constants that are zero
+
+  }
+
+}
+
+
+void Polynomial::clearLeadingZeros(){
+  //remove leading constants that are zero, update the degree of the polynomial, move to new array
+  int i = this->degree;
+  while(this->constants[i] == 0){
+    i--;
+  }
+  cout << "I is " << i << endl;
+  if(i < this->degree && i > -1) //if there are leading zeroes but not completely empty
+  {
+    Polynomial result;
+    result.degree = i;
+    result.constants = new double[result.degree+1];
+    for(int i = 0; i<= result.degree; i++){
+      result.constants[i] = this->constants[i];
+    }
+    double *temp = this->constants;
+    delete[] temp;
+    *this = result;
+    result.~Polynomial();
+  }
+  if( i <= -1){
+    empty(-1);
+  }
 
 }
 bool Polynomial::operator>(const Polynomial& p2){
